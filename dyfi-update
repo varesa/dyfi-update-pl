@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+#	dyfi-update SysV init script for starting and stopping
+#	dyfi-update.pl - A perl client for updating dy.fi
+#	hostnames automatically
+#
+#	by dy.fi admins, admin at dy dot fi
+#
+
+# Specify the location of the pid file here
+# (this must be the same as in dyfi-update.conf!)
+PIDFILE=/var/run/dyfi-update.pid
+# Specify the location of the configuration file:
+CFGFILE=/usr/local/etc/dyfi-update.conf
+
+PATH=/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin
+
+# See how we were called.
+case "$1" in
+  start)
+	echo "Starting dy.fi updating daemon..."
+	dyfi-update.pl -f $CFGFILE &
+	[ $? -eq 0 ] && [ -d /var/lock/subsys ] && touch /var/lock/subsys/dyfi-update
+        ;;
+  stop)
+  	if [ -f $PIDFILE ]; then
+		echo "Stopping dy.fi updating daemon..."
+		kill `cat $PIDFILE`
+		if [ $? -eq 0 ]; then
+			rm $PIDFILE
+			[ -d /var/lock/subsys ] && rm /var/lock/subsys/dyfi-update
+		fi
+	else
+		echo "dy.fi updating daemon is not running (no pid file)"
+	fi
+  	
+	;;
+  *)
+        echo "Usage: dyfi-update {start|stop}"
+        exit 1
+esac
+
+exit 0
+
