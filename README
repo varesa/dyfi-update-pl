@@ -1,6 +1,7 @@
 
     dyfi-update.pl 1.2.0
     by dy.fi admins, admin at dy dot fi
+    modified by Esa Varemo, esa at kuivanto dot fi
 
     A perl client for updating dy.fi hostnames automatically
 
@@ -52,27 +53,22 @@ INSTALLATION:
 
   To install the client, run 'make install'. This will install the
 client script in /usr/local/bin. If a configuration file does not
-exist in /usr/local/etc/dyfi-update.conf, it will install a sample
-file there. It will also install a start/stop script in /etc/init.d.
+exist in /etc/dyfi-update.conf, it will install a sample
+file there. It will also install a systemd service file in /etc/systemd/system.
 
-  Next, edit /usr/local/etc/dyfi-update.conf to put your dy.fi config
+  Next, edit /etc/dyfi-update.conf to put your dy.fi config
 in there.
 
-  Then, try to run the script: '/etc/init.d/dyfi-update start'.
+  Then, try to start the service 'systemctl start dyfi-update'.
 If there are any problems in the configuration, it should barf on the
 console, or the log file you have configured (by default,
 /var/log/dyfi-update.log). You can also stop the client using
-'/etc/init.d/dyfi-update stop'.
+'systemctl stop dyfi-update'.
 
   Do not put dyfi-update.pl in cron. It is a daemon.
 
   If you want dyfi-update.pl to automatically start up when the
-machine is booting, figure out the runlevels you want it to run at.
-Run 'make installboot3' to make it start up at runlevel 3,
-'make installboot5' for runlevel 5, etc. You can find out the
-default booting runlevel using the command
-'grep initdefault /etc/inittab' - you should get a line like
-'id:5:initdefault:' where 5 is the default runlevel.
+machine is booting use 'systemctl enable dyfi-update'
 
 
 UNINSTALLING:
